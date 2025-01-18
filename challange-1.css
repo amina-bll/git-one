@@ -1,0 +1,50 @@
+#logo {
+    margin-right: 400px;
+    height: 60px;
+    width: 60px;
+  }
+    
+  header {
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    padding: 1em;
+    width: max-content;
+    margin: 0px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+    margin-left: 500px;
+  }
+  
+  nav {
+    background-color: rgb(255, 255, 255);
+    padding: 1em;
+    text-align: center;
+    display: flex;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: max-content;
+
+  }
+  
+  nav li {
+    margin: 0 10px;
+  }
+  
+  nav a {
+    color: black;
+    text-decoration: none;
+  }
+  
+  body {
+    border: 30px solid #f97844;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+  
+

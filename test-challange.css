@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+IN:wght@100..400&family=Quicksand:wght@300..700&family=Racing+Sans+One&display=swap');
+
+*{
+    padding : 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Racing Sans One", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+ul{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+/* Utility classes*/
+.primary-text{
+    color: #f97844;
+}
+
+.btn{
+    display: inline-block;
+    padding: 15px 30px;
+    border:none;
+    border-radius: 15px;
+}
+
+
+.btn-primary {
+color: rgb(255, 249, 241);
+border: 1px solid #fff;
+}
+
+header{
+    height: 100vh;
+    background: url('./pizza-img.avif') center center/cover no-repeat;
+}
+/* Header Start */
+#navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#navbar svg{
+    width: 60px;
+    margin-left: 100;
+}
+
+#navbar ul {
+    display :flex;
+    margin-right: 100;
+}
+
+#navbar ul li a {
+   padding: 15px 20px 15px 20px;
+   margin-right: 25px;
+   color: #f8f8f7;
+   font-weight: 600;
+}
+
+#navbar ul li a:hover {
+    border-bottom: 2px solid #e8e5e4;
+ }
+
+header .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    color: #fff;
+    height: 85vh;
+}
+header .content h1 {
+    font-size: 48px;
+}
+
+header .content p {
+    margin: 10px 0 10px
+}
+header::before{
+    content: "";
+    position: absolute;
+    top:0;
+    left: 0;
+    height:100%;
+    background-color: #f97844;
+}
+
+/* Header End */
+
+/* Food Section Start */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.food-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: auto;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    color: #222;
+}
+
+.section-header h2 span {
+    color: #f05a28;
+}
+
+.arrows {
+    display: flex;
+    gap: 10px;
+}
+
+.arrow-btn {
+    background-color: #f05a28;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.food-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.food-card {
+    background-color: #fff7f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.food-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+    border-radius: 50%;
+}
+
+.food-card h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.price {
+    color: #f05a28;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.rating {
+    color: #333;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+
+
