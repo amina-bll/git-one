@@ -27,10 +27,18 @@
     text-align: center;
     display: flex;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: max-content;
-
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: center;
   }
-  
+
+
+  nav ul li a:hover {
+    border-bottom: 2px solid #ba771a;
+ } 
+
+ 
+
   nav li {
     margin: 0 10px;
   }
