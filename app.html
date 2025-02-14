@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Adventure Game! 🚀</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #FFECD2, #FCB69F);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .game-step {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .drag-zone {
+            border: 4px dashed #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 150px;
+            background: #F8FFF8;
+        }
+
+        .fruit-img {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .fruit-img.dragging {
+            transform: scale(1.2) rotate(15deg);
+            opacity: 0.7;
+        }
+
+        .dataset {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 200px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            border: 3px solid #4CAF50;
+        }
+
+        .data-item {
+            position: relative;
+            padding: 10px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .data-item.bad-data {
+            animation: shake 0.5s;
+            background: #FFEBEE;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .data-item:hover .delete-btn {
+            display: block;
+        }
+
+        .train-visual {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .decision-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: #4CAF50;
+            transform-origin: 0 100%;
+            transition: all 2s;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .step-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .step-dot.active {
+            background: #4CAF50;
+            transform: scale(1.3);
+        }
+
+        .prediction-result {
+            font-size: 24px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #fff;
+            text-align: center;
+            animation: popIn 0.5s;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            90% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #4CAF50;">🍎 AI Adventure Game! 🍊</h1>
+        
+        <div class="step-indicator">
+            <div class="step-dot active" id="step1Dot"></div>
+            <div class="step-dot" id="step2Dot"></div>
+            <div class="step-dot" id="step3Dot"></div>
+            <div class="step-dot" id="step4Dot"></div>
+        </div>
+
+        <!-- Step 1: Data Collection -->
+        <div class="game-step" id="step1">
+            <h2>1. Collect Data! 🍎🍊</h2>
+            <p>Drag fruits to the dataset box to help the AI learn!</p>
+            <div class="drag-zone">
+                <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" class="fruit-img" draggable="true">
+                <img src="https://cdn-icons-png.flaticon.com/512/2919/2919635.png" class="fruit-img" draggable="true">
+                <img src="https://cdn-icons-png.flaticon.com/512/3142/3142733.png" class="fruit-img" draggable="true">
+            </div>
+            <div class="dataset" id="dataset"></div>
+            <button onclick="nextStep(2)" id="nextStep1" disabled>I'm done collecting! 🚀</button>
+        </div>
+
+        <!-- Step 2: Data Cleaning -->
+        <div class="game-step" id="step2" style="display: none;">
+            <h2>2. Clean Data! 🧹✨</h2>
+            <p>Click the X to remove bad examples!</p>
+            <div class="dataset" id="cleaningDataset"></div>
+            <button onclick="nextStep(3)" id="nextStep2" disabled>Looks clean! Next ➔</button>
+        </div>
+
+        <!-- Step 3: Train Model -->
+        <div class="game-step" id="step3" style="display: none;">
+            <h2>3. Train the AI! 🤖🎓</h2>
+            <div class="train-visual">
+                <div class="decision-line" id="decisionLine"></div>
+            </div>
+            <button onclick="trainModel()">Start Training! 🏋️♂️</button>
+            <button onclick="nextStep(4)" id="nextStep3" style="display: none;">Test the AI! 🧪</button>
+        </div>
+
+        <!-- Step 4: Testing -->
+        <div class="game-step" id="step4" style="display: none;">
+            <h2>4. Test the AI! 🧪🔍</h2>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" style="width: 100px;">
+                    <input type="number" id="testWeight" placeholder="Weight (grams)">
+                </div>
+                <div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/415/415733.png" style="width: 100px;">
+                    <input type="number" id="testTexture" placeholder="Texture (1-5)">
+                </div>
+            </div>
+            <button onclick="predict()">Guess the Fruit! 🤔</button>
+            <div class="prediction-result" id="predictionResult"></div>
+        </div>
+    </div>
+
+    <script>
+        let dataset = [];
+        let model = { slope: 0.5, intercept: 100 };
+        let currentStep = 1;
+
+        // Drag & Drop functionality
+        document.querySelectorAll('.fruit-img').forEach(img => {
+            img.addEventListener('dragstart', dragStart);
+            img.addEventListener('dragend', dragEnd);
+        });
+
+        const datasetDiv = document.getElementById('dataset');
+        datasetDiv.addEventListener('dragover', dragOver);
+        datasetDiv.addEventListener('drop', dragDrop);
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.src);
+            e.target.classList.add('dragging');
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            datasetDiv.style.backgroundColor = '#E8F5E9';
+        }
+
+        function dragDrop(e) {
+            e.preventDefault();
+            const imgSrc = e.dataTransfer.getData('text/plain');
+            addDataItem(imgSrc);
+            datasetDiv.style.backgroundColor = '#fff';
+        }
+
+        function addDataItem(imgSrc) {
+            // Add some random "bad data" (10% chance)
+            const isBad = Math.random() < 0.1;
+            const fruit = imgSrc.includes('415733') ? 'apple' : 
+                         imgSrc.includes('2919635') ? 'orange' : 'green-apple';
+            
+            const dataItem = document.createElement('div');
+            dataItem.className = `data-item ${isBad ? 'bad-data' : ''}`;
+            dataItem.innerHTML = `
+                <img src="${imgSrc}" class="fruit-img">
+                <button class="delete-btn" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            datasetDiv.appendChild(dataItem);
+            dataset.push({
+                fruit: isBad ? (fruit === 'apple' ? 'orange' : 'apple') : fruit,
+                weight: fruit === 'apple' ? 100 + Math.random()*50 : 150 + Math.random()*50,
+                texture: fruit === 'apple' ? 1 + Math.random()*2 : 3 + Math.random()*2
+            });
+            
+            document.getElementById('nextStep1').disabled = dataset.length < 5;
+        }
+
+        function nextStep(step) {
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            currentStep = step;
+            document.getElementById(`step${step}`).style.display = 'block';
+            
+            // Update step indicators
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index+1 === step);
+            });
+
+            if(step === 2) setupCleaningStep();
+            if(step === 4) setupTestingStep();
+        }
+
+        function setupCleaningStep() {
+            const cleaningDiv = document.getElementById('cleaningDataset');
+            cleaningDiv.innerHTML = dataset.map((item, index) => `
+                <div class="data-item ${item.fruit === 'green-apple' ? 'bad-data' : ''}">
+                    <img src="${getImageForFruit(item.fruit)}" class="fruit-img">
+                    <button class="delete-btn" onclick="removeDataItem(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('nextStep2').disabled = true;
+        }
+
+        function removeDataItem(index) {
+            dataset.splice(index, 1);
+            setupCleaningStep();
+            document.getElementById('nextStep2').disabled = dataset.length < 3;
+        }
+
+        function trainModel() {
+            const line = document.getElementById('decisionLine');
+            line.style.transform = 'rotate(30deg)';
+            line.style.width = '150%';
+            
+            // Simple linear regression
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+            dataset.forEach(point => {
+                sumX += point.texture;
+                sumY += point.weight;
+                sumXY += point.texture * point.weight;
+                sumXX += point.texture * point.texture;
+            });
+            
+            const n = dataset.length;
+            model.slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            model.intercept = (sumY - model.slope * sumX) / n;
+            
+            document.getElementById('nextStep3').style.display = 'inline-block';
+        }
+
+        function predict() {
+            const weight = parseFloat(document.getElementById('testWeight').value);
+            const texture = parseFloat(document.getElementById('testTexture').value);
+            
+            if(!weight || !texture) {
+                alert("Please enter both values!");
+                return;
+            }
+
+            const prediction = weight > model.slope * texture + model.intercept ? 'ORANGE 🍊' : 'APPLE 🍎';
+            const resultDiv = document.getElementById('predictionResult');
+            resultDiv.innerHTML = `
+                ${prediction}<br>
+                <small>${getFunFact(prediction)}</small>
+            `;
+            resultDiv.style.backgroundColor = prediction.includes('APPLE') ? '#FFEBEE' : '#FFF3E0';
+        }
+
+        function getImageForFruit(fruit) {
+            return fruit === 'apple' ? 
+                'https://cdn-icons-png.flaticon.com/512/415/415733.png' :
+                'https://cdn-icons-png.flaticon.com/512/2919/2919635.png';
+        }
+
+        function getFunFact(prediction) {
+            const facts = {
+                'APPLE 🍎': 'Did you know? Apples float because they\'re 25% air!',
+                'ORANGE 🍊': 'Cool fact: Oranges are actually berries!'
+            };
+            return facts[prediction];
+        }
+    </script>
+</body>
+</html>
